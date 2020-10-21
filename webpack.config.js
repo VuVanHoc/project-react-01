@@ -1,31 +1,17 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { WebpackPluginServe: Serve } = require("webpack-plugin-serve");
 const outputPath = path.join(__dirname, "dist");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-
-const pathsToClean = ["dist"];
-const cleanOptions = {
-  root: __dirname,
-  verbose: true,
-  dry: false,
-  exclude: [],
-};
-
-const optionsDevServer = {
-  historyFallback: true,
-  port: 9000,
-  open: true,
-  host: "localhost",
-  static: outputPath,
-  progress: false,
-};
 
 module.exports = {
   mode: "development",
   entry: ["./src/index.js"],
   output: {
     path: outputPath,
+  },
+  devServer:{
+    historyApiFallback: true,
+    port: 9000
   },
 
   module: {
@@ -46,15 +32,8 @@ module.exports = {
         ],
       },
       {
-        test: /\.s[ac]ss$/i,
-        use: [
-          // Creates `style` nodes from JS strings
-          "style-loader",
-          // Translates CSS into CommonJS
-          "css-loader",
-          // Compiles Sass to CSS
-          "sass-loader",
-        ],
+        test: /\.(css)$/i,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
@@ -79,8 +58,6 @@ module.exports = {
       template: "./src/index.html",
       filename: "./index.html",
     }),
-    new Serve(optionsDevServer),
     new CleanWebpackPlugin(),
   ],
-  watch: true,
 };
